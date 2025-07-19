@@ -1,0 +1,28 @@
+{% extends 'pendientes/base.html' %}
+
+{% block title %}Sin Resolver - Parra's Dev{% endblock %}
+
+{% block content %}
+<div class="data-section">
+    <h2>⏳ Lista de Pendientes Sin Resolver (ID y Título)</h2>
+    <p><strong>Total de registros:</strong> {{ total }}</p>
+    
+    <div class="api-grid">
+        {% for item in data %}
+        <div class="api-card">
+            <h3>⏳ ID: {{ item.id }}</h3>
+            <p><strong>Título:</strong> {{ item.title }}</p>
+            <p><em>Estado: Pendiente</em></p>
+            <a href="{% url 'pendientes:detail' item.id %}" class="btn btn-secondary">Ver Detalle</a>
+        </div>
+        {% empty %}
+        <p class="success">¡Excelente! No hay pendientes sin resolver.</p>
+        {% endfor %}
+    </div>
+    
+    <div class="mt-4">
+        <a href="{% url 'pendientes:dashboard' %}" class="btn btn-primary">← Volver al Dashboard</a>
+        <a href="/api/pendientes/sin-resolver/" class="btn btn-secondary" target="_blank">🔗 Ver API JSON</a>
+    </div>
+</div>
+{% endblock %}

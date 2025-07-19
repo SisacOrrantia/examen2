@@ -1,0 +1,57 @@
+{% extends 'pendientes/base.html' %}
+
+{% block title %}Editar {{ pendiente.title }} - Parra's Dev{% endblock %}
+
+{% block content %}
+<div class="data-section">
+    <h2>✏️ Editar Pendiente</h2>
+    
+    <form method="post" style="max-width: 600px; margin: 0 auto;">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 1rem; padding: 1rem; background-color: #f8f9fa; border-radius: 4px;">
+            <p><strong>ID:</strong> {{ pendiente.id }}</p>
+            <p><strong>Creado:</strong> {{ pendiente.created_at|date:"d/m/Y H:i" }}</p>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="title" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Título *</label>
+            <input type="text" id="title" name="title" required 
+                   value="{{ pendiente.title }}"
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #dee2e6; border-radius: 4px;">
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="description" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Descripción</label>
+            <textarea id="description" name="description" rows="4"
+                     style="width: 100%; padding: 0.75rem; border: 1px solid #dee2e6; border-radius: 4px;">{{ pendiente.description }}</textarea>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="user" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Usuario Asignado *</label>
+            <select id="user" name="user" required 
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #dee2e6; border-radius: 4px;">
+                {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}" {% if usuario.id == pendiente.user.id %}selected{% endif %}>
+                    {{ usuario.get_full_name|default:usuario.username }} ({{ usuario.username }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: center;">
+                <input type="checkbox" id="completed" name="completed" 
+                       {% if pendiente.completed %}checked{% endif %} 
+                       style="margin-right: 0.5rem;">
+                <span style="font-weight: bold;">Marcar como completado</span>
+            </label>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+            <a href="{% url 'pendientes:detail' pendiente.id %}" class="btn btn-secondary" style="margin-left: 0.5rem;">← Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

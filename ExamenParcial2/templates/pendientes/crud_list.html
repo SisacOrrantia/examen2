@@ -1,0 +1,52 @@
+{% extends 'pendientes/base.html' %}
+
+{% block title %}CRUD Completo - Parra's Dev{% endblock %}
+
+{% block content %}
+<div class="data-section">
+    <h2>📋 Gestión Completa de Pendientes (CRUD)</h2>
+    <p>Crear, Leer, Actualizar y Eliminar pendientes</p>
+    
+    <div style="margin-bottom: 2rem;">
+        <a href="{% url 'pendientes:create' %}" class="btn btn-primary">➕ Crear Nuevo Pendiente</a>
+        <a href="{% url 'pendientes:dashboard' %}" class="btn btn-secondary">← Volver al Dashboard</a>
+    </div>
+    
+    <div class="data-section">
+        <h3>📊 Estadísticas</h3>
+        <p><strong>Total:</strong> {{ pendientes.count }} | <strong>Completados:</strong> {{ completados }} | <strong>Pendientes:</strong> {{ sin_resolver }}</p>
+    </div>
+    
+    <div class="api-grid">
+        {% for pendiente in pendientes %}
+        <div class="api-card">
+            <h3>{{ pendiente.completed|yesno:"✅,⏳" }} {{ pendiente.title|truncatechars:40 }}</h3>
+            <p><strong>ID:</strong> {{ pendiente.id }}</p>
+            <p><strong>Usuario:</strong> {{ pendiente.user.get_full_name|default:pendiente.user.username }}</p>
+            <p><strong>Estado:</strong> 
+                <span style="color: {{ pendiente.completed|yesno:'#28a745,#dc3545' }}">
+                    {{ pendiente.completed|yesno:"Completado,Pendiente" }}
+                </span>
+            </p>
+            <p><strong>Creado:</strong> {{ pendiente.created_at|date:"d/m/Y H:i" }}</p>
+            {% if pendiente.description %}
+            <p><strong>Descripción:</strong> {{ pendiente.description|truncatechars:80 }}</p>
+            {% endif %}
+            
+            <div style="margin-top: 1rem;">
+                <a href="{% url 'pendientes:detail' pendiente.id %}" class="btn btn-secondary">👁️ Ver</a>
+                <a href="{% url 'pendientes:update' pendiente.id %}" class="btn btn-secondary">✏️ Editar</a>
+                <button onclick="confirmarEliminacion({{ pendiente.id }}, '{{ pendiente.title|escapejs }}')" 
+                        class="btn" style="background-color: #dc3545; color: white;">🗑️ Eliminar</button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="api-card">
+            <h3>📝 No hay pendientes</h3>
+            <p>Comienza creando tu primer pendiente.</p>
+            <a href="{% url 'pendientes:create' %}" class="btn btn-primary">➕ Crear Primer Pendiente</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

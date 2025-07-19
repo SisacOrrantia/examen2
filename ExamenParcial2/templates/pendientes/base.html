@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Parra's Dev - Sistema de Pendientes{% endblock %}</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🚀 Parra's Dev</h1>
+            <p>Sistema de Gestión de Pendientes</p>
+        </div>
+    </div>
+
+    <div class="nav-menu">
+        <div class="container">
+            <ul>
+                <li><a href="{% url 'pendientes:dashboard' %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'pendientes:crud_list' %}">📋 CRUD Completo</a></li>
+                <li><a href="{% url 'pendientes:solo_ids' %}">🔢 Solo IDs</a></li>
+                <li><a href="{% url 'pendientes:ids_titulos' %}">📝 IDs y Títulos</a></li>
+                <li><a href="{% url 'pendientes:sin_resolver' %}">⏳ Sin Resolver</a></li>
+                <li><a href="{% url 'pendientes:resueltos' %}">✅ Resueltos</a></li>
+                <li><a href="{% url 'pendientes:ids_usuarios' %}">👥 IDs y Usuarios</a></li>
+                <li><a href="{% url 'pendientes:resueltos_usuarios' %}">✅👥 Resueltos + Usuarios</a></li>
+                <li><a href="{% url 'pendientes:sin_resolver_usuarios' %}">⏳👥 Sin Resolver + Usuarios</a></li>
+                <li><a href="/admin/" target="_blank">⚙️ Admin</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2025 Parra's Dev - Sistema de Pendientes | Información oportuna y confiable</p>
+        </div>
+    </div>
+
+    <script>
+        // Función para confirmar eliminación
+        function confirmarEliminacion(id, title) {
+            if (confirm(`¿Estás seguro de que quieres eliminar "${title}"?`)) {
+                fetch(`/api/pendientes/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Pendiente eliminado exitosamente');
+                        // Verificar si estamos en una página de detalle específica
+                        if (window.location.pathname.includes('/crud/') && window.location.pathname.match(/\/crud\/\d+\/$/)) {
+                            // Si estamos en una página de detalle, ir a la lista
+                            window.location.href = '/crud/';
+                        } else {
+                            // Si estamos en la lista, simplemente recargar
+                            location.reload();
+                        }
+                    } else {
+                        alert('Error al eliminar el pendiente');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar el pendiente');
+                });
+            }
+        }
+
+        // Función para obtener cookie CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

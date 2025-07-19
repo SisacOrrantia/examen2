@@ -1,0 +1,28 @@
+{% extends 'pendientes/base.html' %}
+
+{% block title %}Resueltos y Usuarios - Parra's Dev{% endblock %}
+
+{% block content %}
+<div class="data-section">
+    <h2>✅👥 Lista de Pendientes Resueltos (ID y Usuario)</h2>
+    <p><strong>Total de registros:</strong> {{ total }}</p>
+    
+    <div class="api-grid">
+        {% for item in data %}
+        <div class="api-card">
+            <h3>✅ ID: {{ item.id }}</h3>
+            <p><strong>Usuario ID:</strong> {{ item.user_id }}</p>
+            <p><em>Estado: Completado</em></p>
+            <a href="{% url 'pendientes:detail' item.id %}" class="btn btn-secondary">Ver Detalle</a>
+        </div>
+        {% empty %}
+        <p class="loading">No hay pendientes completados aún.</p>
+        {% endfor %}
+    </div>
+    
+    <div class="mt-4">
+        <a href="{% url 'pendientes:dashboard' %}" class="btn btn-primary">← Volver al Dashboard</a>
+        <a href="/api/pendientes/resueltos-usuarios/" class="btn btn-secondary" target="_blank">🔗 Ver API JSON</a>
+    </div>
+</div>
+{% endblock %}

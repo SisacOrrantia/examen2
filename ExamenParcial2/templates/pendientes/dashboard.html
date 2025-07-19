@@ -1,0 +1,108 @@
+{% extends 'pendientes/base.html' %}
+
+{% block title %}Da        <div class="api-card">
+            <h3>👥 IDs y Usuarios</h3>
+            <p>Lista de todos los pendientes con sus identificadores y usuarios asignados.</p>
+            <a href="{% url 'pendientes:ids_usuarios' %}" class="btn btn-primary">Ver Lista</a>
+        </div>rd - Parra's Dev{% endblock %}
+
+{% block content %}
+<div class="data-section">
+    <h2>📊 Dashboard Principal</h2>
+    <div class="api-grid">
+        <div class="api-card">
+            <h3>📈 Estadísticas Generales</h3>
+            <p><strong>Total de Pendientes:</strong> {{ stats.total }}</p>
+            <p><strong>Completados:</strong> {{ stats.completados }}</p>
+            <p><strong>Sin Resolver:</strong> {{ stats.sin_resolver }}</p>
+            <p><strong>Usuarios Activos:</strong> {{ stats.usuarios }}</p>
+        </div>
+
+        <div class="api-card">
+            <h3>🎯 Funcionalidades Disponibles</h3>
+            <p>✅ 7 Tipos de listas según requerimientos</p>
+            <p>✅ CRUD completo operativo</p>
+            <p>✅ Base de datos SQLite con datos en español</p>
+            <p>✅ API REST profesional</p>
+        </div>
+
+        <div class="api-card">
+            <h3>🚀 Accesos Rápidos</h3>
+            <a href="{% url 'pendientes:crud_list' %}" class="btn btn-primary">📋 Gestionar Pendientes</a>
+            <a href="{% url 'pendientes:create' %}" class="btn btn-secondary">➕ Crear Nuevo</a>
+        </div>
+    </div>
+</div>
+
+<div class="data-section">
+    <h2>📋 Listas Disponibles </h2>
+    <div class="api-grid">
+        <div class="api-card">
+            <h3>🔢 Solo IDs</h3>
+            <p>Lista de todos los pendientes mostrando únicamente los identificadores.</p>
+            <a href="{% url 'pendientes:solo_ids' %}" class="btn btn-primary">Ver Lista</a>
+        </div>
+
+        <div class="api-card">
+            <h3>📝 IDs y Títulos</h3>
+            <p>Lista completa con identificadores y títulos de todos los pendientes.</p>
+            <a href="{% url 'pendientes:ids_titulos' %}" class="btn btn-primary">Ver Lista</a>
+        </div>
+
+        <div class="api-card">
+            <h3>⏳ Sin Resolver</h3>
+            <p>Pendientes que aún no han sido completados (ID y Título).</p>
+            <a href="{% url 'pendientes:sin_resolver' %}" class="btn btn-primary">Ver Lista</a>
+        </div>
+
+        <div class="api-card">
+            <h3>✅ Resueltos</h3>
+            <p>Pendientes que ya han sido marcados como completados (ID y Título).</p>
+            <a href="{% url 'pendientes:resueltos' %}" class="btn btn-primary">Ver Lista</a>
+        </div>
+
+        <div class="api-card">
+            <h3>� IDs y Usuarios</h3>
+            <p>Lista de todos los pendientes con sus identificadores y usuarios asignados.</p>
+            <a href="{% url 'pendientes:ids_usuarios' %}" class="btn btn-primary">Ver Lista</a>
+        </div>
+
+        <div class="api-card">
+            <h3>✅👥 Resueltos + Usuarios</h3>
+            <p>Pendientes completados mostrando ID y usuario responsable.</p>
+            <a href="{% url 'pendientes:resueltos_usuarios' %}" class="btn btn-primary">Ver Lista</a>
+        </div>
+
+        <div class="api-card">
+            <h3>⏳👥 Sin Resolver + Usuarios</h3>
+            <p>Pendientes pendientes mostrando ID y usuario asignado.</p>
+            <a href="{% url 'pendientes:sin_resolver_usuarios' %}" class="btn btn-primary">Ver Lista</a>
+        </div>
+
+        <div class="api-card">
+            <h3>📋 CRUD Completo</h3>
+            <p>Gestión completa: Crear, Leer, Actualizar y Eliminar pendientes.</p>
+            <a href="{% url 'pendientes:crud_list' %}" class="btn btn-primary">Gestionar</a>
+        </div>
+    </div>
+</div>
+
+<div class="data-section">
+    <h2>📊 Últimos Pendientes Creados</h2>
+    {% if ultimos_pendientes %}
+        <div class="api-grid">
+            {% for pendiente in ultimos_pendientes %}
+            <div class="api-card">
+                <h3>{{ pendiente.completed|yesno:"✅,⏳" }} {{ pendiente.title|truncatechars:30 }}</h3>
+                <p><strong>Usuario:</strong> {{ pendiente.user.get_full_name|default:pendiente.user.username }}</p>
+                <p><strong>Estado:</strong> {{ pendiente.completed|yesno:"Completado,Pendiente" }}</p>
+                <p><strong>Creado:</strong> {{ pendiente.created_at|date:"d/m/Y H:i" }}</p>
+                <a href="{% url 'pendientes:detail' pendiente.id %}" class="btn btn-secondary">Ver Detalle</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="loading">No hay pendientes registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'pendientes/base.html' %}
+
+{% block title %}Crear Pendiente - Parra's Dev{% endblock %}
+
+{% block content %}
+<div class="data-section">
+    <h2>➕ Crear Nuevo Pendiente</h2>
+    
+    <form method="post" style="max-width: 600px; margin: 0 auto;">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="title" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Título *</label>
+            <input type="text" id="title" name="title" required 
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #dee2e6; border-radius: 4px;"
+                   placeholder="Ingresa el título del pendiente">
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="description" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Descripción</label>
+            <textarea id="description" name="description" rows="4"
+                     style="width: 100%; padding: 0.75rem; border: 1px solid #dee2e6; border-radius: 4px;"
+                     placeholder="Describe los detalles del pendiente (opcional)"></textarea>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="user" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Usuario Asignado *</label>
+            <select id="user" name="user" required 
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #dee2e6; border-radius: 4px;">
+                <option value="">Selecciona un usuario</option>
+                {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}">
+                    {{ usuario.get_full_name|default:usuario.username }} ({{ usuario.username }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: center;">
+                <input type="checkbox" id="completed" name="completed" style="margin-right: 0.5rem;">
+                <span style="font-weight: bold;">Marcar como completado</span>
+            </label>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">✅ Crear Pendiente</button>
+            <a href="{% url 'pendientes:crud_list' %}" class="btn btn-secondary" style="margin-left: 0.5rem;">← Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
